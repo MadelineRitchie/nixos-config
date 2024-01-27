@@ -1,13 +1,12 @@
 { config, pkgs, ... }:
 {
-  imports =
-    [
-      ./hardware-configuration.nix
-      <home-manager/nixos>
-    ];
+  imports = [
+    ./hardware-configuration.nix
+    <home-manager/nixos>
+  ];
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  # Bootloader.
   boot.loader = {
     efi = {
       canTouchEfiVariables = true;
@@ -28,20 +27,11 @@
     ];
   };
 
-  networking.hostName = "mystique-root"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
+  networking.hostName = "mystique-root";
   networking.networkmanager.enable = true;
 
-  # Set your time zone.
   time.timeZone = "America/Los_Angeles";
 
-  # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
 
   i18n.extraLocaleSettings = {
@@ -56,7 +46,6 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Configure keymap in X11
   services.xserver = {
     videoDrivers = ["amdgpu"];
     enable = true;
@@ -69,17 +58,6 @@
     };
     layout = "us";
     xkbVariant = "";
-  };
-  programs.sway = {
-    # enable = true;
-  };
-  programs.wayfire = {
-    # enable = true;
-    plugins = with pkgs.wayfirePlugins; [
-      wcm
-      wf-shell
-      wayfire-plugins-extra
-    ];
   };
   hardware.opengl = {
     enable = true;

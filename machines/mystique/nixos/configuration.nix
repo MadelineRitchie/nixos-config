@@ -20,6 +20,26 @@
     };
   };
 
+  boot.initrd.availableKernelModules = [ "vfio-pci" "amdgpu" ];
+  boot.initrd.preDeviceCommands = ''
+    DEVS="0000:01:00.0 0000:01:00.1 0000:01:00.2 0000:01:00.3"
+    for DEV in $DEVS; do
+      echo "vfio-pci" > /sys/bus/pci/devices/$DEV/driver_override
+    done
+    modprobe -i vfio-pci
+  '';
+  systemd.tmpfiles.rules = [
+    "f /dev/shm/scream 0660 madeline qemu-libvirtd -"
+    "f /dev/shm/looking-glass 0660 madeline qemu-libvirtd -"
+  ];
+  boot.kernelModules = ["kvmfr"];
+  boot.extraModulePackages = [config.boot.kernelPackages.kvmfr];
+  boot.kernelParams = [
+#    "nomodeset"
+    # "video=HDMI-A-1:3840x2160@60"
+    # "video=DP-2:3840x2160@60"
+  ];
+
   fileSystems."/mnt/games" = {
     options = [
       "uid=1000"
@@ -54,7 +74,7 @@
     displayManager.sddm = {
       enable = true;
       autoNumlock = true;
-      wayland.enable = true;
+      # wayland.enable = true;
     };
     layout = "us";
     xkbVariant = "";
@@ -70,13 +90,15 @@
       driversi686Linux.amdvlk
     ];
   };
-  hardware.nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = false;
-    open = false;
-    nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-  };
+  # hardware.nvidia = {
+  #   modesetting.enable = true;
+  #   powerManagement.enable = false;
+  #   open = false;
+  #   nvidiaSettings = true;
+  #   package = config.boot.kernelPackages.nvidiaPackages.stable;
+  # };
+
+  # Is this just for nvidia?
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   security.rtkit.enable = true;
@@ -103,7 +125,11 @@
   nixpkgs.config.allowUnfree = true;
 
   virtualisation = {
-    libvirtd.enable = true;
+    libvirtd = {
+      enable = true;
+      onBoot = "ignore";
+      onShutdown = "shutdown";
+    };
     spiceUSBRedirection.enable = true;
   };
 
@@ -120,19 +146,23 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = [
-    pkgs.wget
-    pkgs.git
-    pkgs.tmux
-    pkgs.most
-    pkgs.htop
-    pkgs.tldr
+  environment.systemPackages = with pkgs; [
+    wget
+    git
+    tmux
+    most
+    htop
+    tldr
 
-    pkgs.kitty
-    pkgs.xwayland # wonder if this is a dang default
-    pkgs.vesktop
-    pkgs.wl-clipboard #wl-copy and wl-paste
-    pkgs.usbutils #lsusb and such
+    kitty
+    xwayland # wonder if this is a dang default
+    vesktop
+    wl-clipboard #wl-copy and wl-paste
+    usbutils #lsusb and such
+    pciutils
+
+    looking-glass-client
+    scream
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

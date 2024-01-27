@@ -38,7 +38,7 @@ in
 		plugins = [
 			{ name = "grc"; src = pkgs.fishPlugins.grc.src; }
 			{ name = "forgit"; src = pkgs.fishPlugins.forgit.src; }
-			{ name = "async-prompt"; src = pkgs.fishPlugins.async-prompt.src; }
+			# { name = "async-prompt"; src = pkgs.fishPlugins.async-prompt.src; }
 		];
 		# interactiveShellInit = ''
 		# 	source (fzf-share)/key-bindings.fish

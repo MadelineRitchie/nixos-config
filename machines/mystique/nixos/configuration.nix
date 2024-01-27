@@ -1,20 +1,11 @@
 { config, pkgs, ... }:
-let
-  nixvim = import (builtins.fetchGit {
-    url = "https://github.com/nix-community/nixvim";
-    # If you are not running an unstable channel of nixpkgs, select the corresponding branch of nixvim.
-    ref = "nixos-23.11";
-  });
-  cockpit-apps = pkgs.callPackage packages/cockpit/default.nix { inherit pkgs; };
-  unstable = import <nixos-unstable> { config = { allowUnfree = true; }; };
-in
-  {
-    imports =
-      [ # Include the results of the hardware scan.
+{
+  imports =
+    [
       ./hardware-configuration.nix
       <home-manager/nixos>
     ];
-    nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Bootloader.
   boot.loader = {

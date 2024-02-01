@@ -20,7 +20,10 @@
     };
   };
 
-  boot.initrd.availableKernelModules = [ "vfio-pci" "amdgpu" ];
+  # boot.initrd.kernelModules = [ "amdgpu" ];
+  boot.initrd.availableKernelModules = [ 
+    "vfio-pci" 
+  ];
   boot.initrd.preDeviceCommands = ''
     DEVS="0000:01:00.0 0000:01:00.1 0000:01:00.2 0000:01:00.3"
     for DEV in $DEVS; do
@@ -35,9 +38,8 @@
   boot.kernelModules = ["kvmfr"];
   boot.extraModulePackages = [config.boot.kernelPackages.kvmfr];
   boot.kernelParams = [
-#    "nomodeset"
-    # "video=HDMI-A-1:3840x2160@60"
-    # "video=DP-2:3840x2160@60"
+    "video=HDMI-A-1:3840x2160@60"
+    "video=DP-2:3840x2160@60"
   ];
 
   fileSystems."/mnt/games" = {
@@ -67,29 +69,32 @@
   };
 
   services.xserver = {
-    videoDrivers = ["amdgpu"];
     enable = true;
+    # videoDrivers = ["amdgpu"];
+
+    xkb.layout = "us";
+    xkb.variant = "";
+
     desktopManager.plasma5.enable = true;
+
     displayManager.defaultSession = "plasmawayland";
     displayManager.sddm = {
       enable = true;
       autoNumlock = true;
-      # wayland.enable = true;
+      wayland.enable = true;
     };
-    layout = "us";
-    xkbVariant = "";
   };
-  hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-    extraPackages = with pkgs; [
-      amdvlk
-    ];
-    extraPackages32 = with pkgs; [
-      driversi686Linux.amdvlk
-    ];
-  };
+  # hardware.opengl = {
+  #   enable = true;
+  #   driSupport = true;
+  #   driSupport32Bit = true;
+  #   extraPackages = with pkgs; [
+  #     amdvlk
+  #   ];
+  #   extraPackages32 = with pkgs; [
+  #     driversi686Linux.amdvlk
+  #   ];
+  # };
   # hardware.nvidia = {
   #   modesetting.enable = true;
   #   powerManagement.enable = false;
@@ -158,8 +163,13 @@
     xwayland # wonder if this is a dang default
     vesktop
     wl-clipboard #wl-copy and wl-paste
+
     usbutils #lsusb and such
     pciutils
+    wayland-utils
+    clinfo
+    glxinfo
+    vulkan-tools
 
     looking-glass-client
     scream

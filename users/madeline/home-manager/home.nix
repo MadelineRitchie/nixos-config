@@ -12,11 +12,11 @@
 	home.stateVersion = "23.11";
 
 	home.packages = with pkgs; [
-		teams-for-linux
 		obsidian
 		jetbrains.rider
 		ungoogled-chromium
-		vscode.fhs
+                vscode.fhs
+                cinny-desktop
 	];
 
 	home.file = {

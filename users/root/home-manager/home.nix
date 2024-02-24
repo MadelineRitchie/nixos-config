@@ -15,12 +15,6 @@
   # release notes.
   home.stateVersion = "23.11"; # Please read the comment before changing.
 
-  nixpkgs.config.permittedInsecurePackages = [
-    "electron-25.9.0"
-  ];
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "obsidian"
-  ];
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [

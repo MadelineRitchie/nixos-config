@@ -8,10 +8,18 @@
 
   # BTRFS
   fileSystems = {
-    "/".options = [ "compress=zstd" ];
-    "/home".options = [ "compress=zstd" ];
+    "/".options = [ "compress=zstd" "noatime" ];
+    "/home".options = [ "compress=zstd" "noatime" ];
     "/nix".options = [ "compress=zstd" "noatime" ];
+
     "/swap".options = [ "noatime" ];
+
+    "/mnt/btrfs".options = [ "compress=zstd" "noatime" ];
+
+    "/mnt/manjaro".options = [ "compress=zstd" "noatime" ];
+    "/mnt/manjaro/home".options = [ "compress=zstd" "noatime" ];
+    "/mnt/manjaro/var/log".options = [ "compress=zstd" "noatime" ];
+    "/mnt/manjaro/var/cache".options = [ "compress=zstd" "noatime" ];
   };
 
   boot = {

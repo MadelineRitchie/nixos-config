@@ -68,7 +68,7 @@
     # desktopManager.plasma5.enable = true;
     desktopManager.plasma6.enable = true;
 
-    displayManager.defaultSession = "plasmawayland";
+    displayManager.defaultSession = "plasma";
     displayManager.sddm = {
       enable = true;
       autoNumlock = true;

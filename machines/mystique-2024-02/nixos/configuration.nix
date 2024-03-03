@@ -21,13 +21,26 @@
     "/mnt/manjaro/var/log".options = [ "compress=zstd" "noatime" ];
     "/mnt/manjaro/var/cache".options = [ "compress=zstd" "noatime" ];
   };
+  services.btrfs.autoScrub = {
+    enable = true;
+    interval = "weekly";
+    fileSystems = [ "/mnt/btrfs" ];
+  };
+
+  swapDevices = [ { device = "/swap/swapfile"; } ];
 
   boot = {
+    kernelPackages = pkgs.linuxPackages_6_6;
+    extraModulePackages = with config.boot.kernelPackages;
+      [];
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
     initrd = {
+      kernelModules = [
+        "amdgpu"
+      ];
       availableKernelModules = [
         "vfio-pci"
       ];
@@ -52,7 +65,8 @@
     enable = true;
     # videoDrivers = ["amdgpu"];
 
-    desktopManager.plasma5.enable = true;
+    # desktopManager.plasma5.enable = true;
+    desktopManager.plasma6.enable = true;
 
     displayManager.defaultSession = "plasmawayland";
     displayManager.sddm = {

@@ -16,10 +16,7 @@
 
     "/mnt/btrfs".options = [ "compress=zstd" "noatime" ];
 
-    "/mnt/manjaro".options = [ "compress=zstd" "noatime" ];
-    "/mnt/manjaro/home".options = [ "compress=zstd" "noatime" ];
-    "/mnt/manjaro/var/log".options = [ "compress=zstd" "noatime" ];
-    "/mnt/manjaro/var/cache".options = [ "compress=zstd" "noatime" ];
+    "/boot".options = [ "umask=0077" ];
   };
   services.btrfs.autoScrub = {
     enable = true;
@@ -47,6 +44,36 @@
     };
   };
 
+  hardware = {
+    opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+    };
+    nvidia = {
+      modesetting.enable = true;
+      powerManagement.enable = false;
+      powerManagement.finegrained = false;
+      open = false;
+      nvidiaSettings = true;
+    };
+  };
+
+  services.xserver = {
+    enable = true;
+    videoDrivers = ["video" "nvidia"];
+
+    # desktopManager.plasma5.enable = true;
+    desktopManager.plasma6.enable = true;
+
+    displayManager.defaultSession = "plasma";
+    displayManager.sddm = {
+      enable = true;
+      autoNumlock = true;
+      wayland.enable = true;
+    };
+  };
+
   networking.hostName = "mystique";
   networking.networkmanager.enable = true;
 
@@ -60,26 +87,6 @@
   #   keyMap = "us";
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
-
-  services.xserver = {
-    enable = true;
-    # videoDrivers = ["amdgpu"];
-
-    # desktopManager.plasma5.enable = true;
-    desktopManager.plasma6.enable = true;
-
-    displayManager.defaultSession = "plasma";
-    displayManager.sddm = {
-      enable = true;
-      autoNumlock = true;
-      wayland.enable = true;
-    };
-  };
-  
-
-  # Configure keymap in X11
-  # services.xserver.xkb.layout = "us";
-  # services.xserver.xkb.options = "eurosign:e,caps:escape";
 
   # Enable CUPS to print documents.
   # services.printing.enable = true;
@@ -130,7 +137,7 @@
       enableSSHSupport = true;
     };
     #</suid>
-  
+
     _1password.enable = true;
     _1password-gui = {
       enable = true;
@@ -199,7 +206,7 @@
     #scream
   ];
 
-  system.stateVersion = "23.11"; # Did you read the comment?
+  system.stateVersion = "23.11";
 
 }
 

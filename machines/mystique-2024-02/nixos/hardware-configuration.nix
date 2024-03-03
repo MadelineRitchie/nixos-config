@@ -47,30 +47,6 @@
       fsType = "btrfs";
     };
 
-  fileSystems."/mnt/manjaro" =
-    { device = "/dev/disk/by-uuid/b27c31af-9a76-4d4b-8b70-2bb60835a53e";
-      fsType = "btrfs";
-      options = [ "subvol=manjaro/@" ];
-    };
-
-  fileSystems."/mnt/manjaro/home" =
-    { device = "/dev/disk/by-uuid/b27c31af-9a76-4d4b-8b70-2bb60835a53e";
-      fsType = "btrfs";
-      options = [ "subvol=manjaro/@home" ];
-    };
-
-  fileSystems."/mnt/manjaro/var/log" =
-    { device = "/dev/disk/by-uuid/b27c31af-9a76-4d4b-8b70-2bb60835a53e";
-      fsType = "btrfs";
-      options = [ "subvol=manjaro/@log" ];
-    };
-
-  fileSystems."/mnt/manjaro/var/cache" =
-    { device = "/dev/disk/by-uuid/b27c31af-9a76-4d4b-8b70-2bb60835a53e";
-      fsType = "btrfs";
-      options = [ "subvol=manjaro/@cache" ];
-    };
-
   swapDevices = [ ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking

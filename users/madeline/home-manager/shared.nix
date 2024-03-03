@@ -73,7 +73,8 @@ in
 			number = true;
 			relativenumber = true;
 			title = true;
-			list = true;
+                        list = true;
+                        shiftwidth = 2;
 		};
 		extraConfigVim = ''
 			set mouse=

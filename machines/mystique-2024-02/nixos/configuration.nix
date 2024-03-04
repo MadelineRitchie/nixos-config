@@ -1,10 +1,11 @@
 { config, lib, pkgs, ... }:
-
 {
   imports =
     [
       ./hardware-configuration.nix
     ];
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # BTRFS
   fileSystems = {
@@ -29,11 +30,14 @@
   boot = {
     kernelPackages = pkgs.linuxPackages_6_6;
     extraModulePackages = with config.boot.kernelPackages;
-      [];
+      [kvmfr];
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
+    kernelModules = [
+      "kvmfr"
+    ];
     initrd = {
       kernelModules = [
         "amdgpu"
@@ -41,6 +45,13 @@
       availableKernelModules = [
         "vfio-pci"
       ];
+      preDeviceCommands = ''
+        DEVS="0000:01:00.0 0000:01:00.1"
+        for DEV in $DEVS; do
+          echo "vfio-pci" > /sys/bus/pci/devices/$DEV/driver_override
+        done
+        modprobe -i vfio-pci
+      '';
     };
   };
 
@@ -59,23 +70,76 @@
     };
   };
 
+  systemd.tmpfiles.rules = [
+    "f /dev/shm/looking-glass 0660 madeline qemu-libvirtd -"
+  ];
+
   services.xserver = {
     enable = true;
-    videoDrivers = ["video" "nvidia"];
+    # videoDrivers = ["video" "nvidia"];
 
-    # desktopManager.plasma5.enable = true;
-    desktopManager.plasma6.enable = true;
+    desktopManager.plasma5.enable = true;
+    # desktopManager.budgie.enable = true;
+    desktopManager.xfce = {
+      enable = true;
+      noDesktop = true;
+      enableXfwm = false;
+    };
 
-    displayManager.defaultSession = "plasma";
+    windowManager.openbox.enable = true;
+    windowManager.i3.enable = true;
+    windowManager.xmonad.enable = true;
+
+    # displayManager.defaultSession = "plasma";
     displayManager.sddm = {
       enable = true;
       autoNumlock = true;
-      wayland.enable = true;
+      # wayland.enable = true;
     };
   };
 
-  networking.hostName = "mystique";
-  networking.networkmanager.enable = true;
+  networking = {
+    hostName = "mystique";
+    # networkmanager.enable = true;
+    useNetworkd = true;
+  };
+  systemd.network = {
+    enable = true;
+    netdevs = {
+      "20-br0" = {
+        netdevConfig = {
+          Kind = "bridge";
+          Name = "br0";
+        };
+      };
+    };
+    networks = {
+      # "10-enp13s0" = {
+      #   matchConfig.Name = "enp13s0";
+      #   networkConfig.DHCP = "ipv4";
+      #   networkConfig.IPv6AcceptRA = true;
+      # };
+      # "20-wlp14s0" = {
+      #   enable = false;
+      # };
+      "30-enp13s0" = {
+        matchConfig.Name = "en*";
+        networkConfig.Bridge = "br0";
+        # linkConfig.RequiredForOnline = "enslaved";
+      };
+      "40-br0" = {
+        matchConfig.Name = "br0";
+        networkConfig.DHCP = "ipv4";
+        networkConfig.IPv6AcceptRA = true;
+        # bridgeConfig = {
+        # };
+        # networkConfig.LinkLocalAddressing = "no";
+        # linkConfig = {
+        #   RequiredForOnline = "carrier";
+        # };
+      };
+    };
+  };
 
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
@@ -124,6 +188,7 @@
 
   programs = {
     fish.enable = true;
+    dconf.enable = true; # for easyeffects service
 
     virt-manager.enable = true;
     partition-manager.enable = true;
@@ -158,6 +223,11 @@
       gamescopeSession.enable = true;
     };
   };
+
+  fonts.packages = with pkgs; [
+    (nerdfonts.override { fonts = [ "JetBrainsMono"]; })
+  ];
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
 
@@ -173,7 +243,6 @@
     most
 
     ## gui
-    kitty
     #xwayland # wonder if this is a dang default
     vesktop
     #wl-clipboard #wl-copy and wl-paste
@@ -202,6 +271,7 @@
     smartmontools
 
 
+    easyeffects
     looking-glass-client
     #scream
   ];

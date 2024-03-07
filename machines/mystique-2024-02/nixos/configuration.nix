@@ -5,7 +5,13 @@
       ./hardware-configuration.nix
     ];
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix = {
+    package = pkgs.nixFlakes;
+    extraOptions = '' 
+      experimental-features = nix-command flakes
+    '';
+  };
+
 
   # BTRFS
   fileSystems = {
@@ -97,6 +103,14 @@
       # wayland.enable = true;
     };
   };
+  services.printing.enable = true;
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
+  hardware.sane.enable = true;
+  hardware.sane.extraBackends = [ pkgs.sane-airscan ];
 
   networking = {
     hostName = "mystique";
@@ -164,9 +178,10 @@
   };
 
   users.users.madeline = {
+    createHome = true;
     isNormalUser = true;
     description = "Madeline Ritchie";
-    extraGroups = [ "networkmanager" "wheel" "libvirtd" ];
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "lp" "scanner" ];
     packages = with pkgs; [];
     shell = pkgs.fish;
   };

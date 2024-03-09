@@ -42,15 +42,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1709938455,
-        "narHash": "sha256-pKgN8RlzCoaAiQT+/T6wl8Lxvn5aqKjNXcu2aoB5+Oo=",
-        "owner": "j-brn",
+        "lastModified": 1710098422,
+        "narHash": "sha256-uFjtsyXfEk934iZSGea5W+x1tPdy1otj/37/MajvCyo=",
+        "owner": "MadelineRitchie",
         "repo": "nixos-vfio",
-        "rev": "997afddad4c90172d6189065642875088a288831",
+        "rev": "f566539daa2a130d7039e44e16d948cd342ad346",
         "type": "github"
       },
       "original": {
-        "owner": "j-brn",
+        "owner": "MadelineRitchie",
+        "ref": "mystique",
         "repo": "nixos-vfio",
         "type": "github"
       }

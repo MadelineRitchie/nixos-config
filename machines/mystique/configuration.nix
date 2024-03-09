@@ -7,10 +7,11 @@
 
   nix = {
     package = pkgs.nixFlakes;
-    extraOptions = '' 
-      experimental-features = nix-command flakes
-    '';
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+    };
   };
+  # TODO split system-specific config from config for all systems
 
 
   # BTRFS
@@ -35,30 +36,11 @@
 
   boot = {
     kernelPackages = pkgs.linuxPackages_6_6;
-    extraModulePackages = with config.boot.kernelPackages;
-      [kvmfr];
     loader = {
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    kernelModules = [
-      "kvmfr"
-    ];
-    initrd = {
-      kernelModules = [
-        "amdgpu"
-      ];
-      availableKernelModules = [
-        "vfio-pci"
-      ];
-      preDeviceCommands = ''
-        DEVS="0000:01:00.0 0000:01:00.1"
-        for DEV in $DEVS; do
-          echo "vfio-pci" > /sys/bus/pci/devices/$DEV/driver_override
-        done
-        modprobe -i vfio-pci
-      '';
-    };
+    initrd.kernelModules = [ "amdgpu" ];
   };
 
   hardware = {
@@ -67,25 +49,12 @@
       driSupport = true;
       driSupport32Bit = true;
     };
-    nvidia = {
-      modesetting.enable = true;
-      powerManagement.enable = false;
-      powerManagement.finegrained = false;
-      open = false;
-      nvidiaSettings = true;
-    };
   };
-
-  systemd.tmpfiles.rules = [
-    "f /dev/shm/looking-glass 0660 madeline qemu-libvirtd -"
-  ];
 
   services.xserver = {
     enable = true;
-    # videoDrivers = ["video" "nvidia"];
 
     desktopManager.plasma5.enable = true;
-    # desktopManager.budgie.enable = true;
     desktopManager.xfce = {
       enable = true;
       noDesktop = true;
@@ -96,11 +65,9 @@
     windowManager.i3.enable = true;
     windowManager.xmonad.enable = true;
 
-    # displayManager.defaultSession = "plasma";
     displayManager.sddm = {
       enable = true;
       autoNumlock = true;
-      # wayland.enable = true;
     };
   };
   services.printing.enable = true;
@@ -114,7 +81,6 @@
 
   networking = {
     hostName = "mystique";
-    # networkmanager.enable = true;
     useNetworkd = true;
   };
   systemd.network = {
@@ -128,29 +94,17 @@
       };
     };
     networks = {
-      # "10-enp13s0" = {
-      #   matchConfig.Name = "enp13s0";
-      #   networkConfig.DHCP = "ipv4";
-      #   networkConfig.IPv6AcceptRA = true;
-      # };
-      # "20-wlp14s0" = {
-      #   enable = false;
-      # };
+      "20-wlp14s0" = {
+        enable = false;
+      };
       "30-enp13s0" = {
         matchConfig.Name = "en*";
         networkConfig.Bridge = "br0";
-        # linkConfig.RequiredForOnline = "enslaved";
       };
       "40-br0" = {
         matchConfig.Name = "br0";
         networkConfig.DHCP = "ipv4";
         networkConfig.IPv6AcceptRA = true;
-        # bridgeConfig = {
-        # };
-        # networkConfig.LinkLocalAddressing = "no";
-        # linkConfig = {
-        #   RequiredForOnline = "carrier";
-        # };
       };
     };
   };
@@ -166,9 +120,6 @@
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
 
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
-
   security.rtkit.enable = true; # I think this is a pipewire thing?
   services.pipewire = {
     enable = true;
@@ -177,11 +128,25 @@
     pulse.enable = true;
   };
 
+  virtualisation = {
+    libvirtd = {
+      enable = true;
+      onBoot = "ignore";
+      onShutdown = "shutdown";
+      deviceACL = [
+        "/dev/vfio/vfio"
+        "/dev/kvm"
+        "/dev/kvmfr0"
+        "/dev/null"
+      ];
+    };
+  };
+
   users.users.madeline = {
     createHome = true;
     isNormalUser = true;
     description = "Madeline Ritchie";
-    extraGroups = [ "networkmanager" "wheel" "libvirtd" "lp" "scanner" ];
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "lp" "scanner" "kvm" ];
     packages = with pkgs; [];
     shell = pkgs.fish;
   };
@@ -192,14 +157,9 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  virtualisation = {
-    libvirtd = {
-      enable = true;
-      onBoot = "ignore";
-      onShutdown = "shutdown";
-    };
-    spiceUSBRedirection.enable = true;
-  };
+  # systemd.tmpfiles.rules = [
+  #   "f /dev/shm/looking-glass 0660 madeline qemu-libvirtd -"
+  # ];
 
   programs = {
     fish.enable = true;
@@ -287,7 +247,7 @@
 
 
     easyeffects
-    looking-glass-client
+    # looking-glass-client
     #scream
   ];
 

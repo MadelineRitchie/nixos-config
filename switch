@@ -1,4 +1,27 @@
 #! /usr/bin/env bash
 
-sudo nixos-rebuild switch --upgrade --flake ./machines/mystique/nixos/
+# Shows the output of every command
+set +x
 
+rebuild_home() {
+  home-manager --help
+}
+rebuild_system() {
+  sudo nixos-rebuild switch --flake ~/nixos-config/machines/mystique/
+}
+restart_X() {
+  echo "⚠️ Restarting X11 (requires authentication) ⚠️"
+  systemctl restart display-manager
+}
+case $1 in
+  "home")
+    rebuild_home $2;;
+  "restart-x")
+    restart_X;;
+  "update-fish")
+    fish -c fish_update_completions;;
+  "system")
+    rebuild_system;;
+  *)
+    echo "expected 'home', 'restart-x', 'update-fish', 'system'";;
+esac

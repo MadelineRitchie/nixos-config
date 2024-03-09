@@ -13,43 +13,28 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +1 machines/mystique/nixos/configuration.nix
-badd +1 machines/mystique/nixos/flake.lock
-badd +1 machines/mystique/nixos/flake.nix
-badd +0 machines/mystique/nixos/hardware-configuration.nix
+badd +15 machines/mystique-2024-02/nixos/configuration.nix
+badd +1 machines/mystique-2024-02/nixos/flake.lock
+badd +17 ~/nixos-config/mystique-flake.nix
+badd +1 machines/mystique-2024-02/nixos/hardware-configuration.nix
+badd +7 switch
+badd +0 bootstrap-new-nixos.ps1
+badd +0 lsiommu-simple.sh
+badd +0 lsiommu.sh
+badd +39 users/madeline/home.nix
+badd +90 users/shared.nix
+badd +28 ~/repos/gvolpe-nix-config/switch
+badd +1 machines/mystique-2024-02/nixos/flake.nix
 argglobal
 %argdel
-$argadd machines/mystique/nixos/configuration.nix
-$argadd machines/mystique/nixos/flake.lock
-$argadd machines/mystique/nixos/flake.nix
-$argadd machines/mystique/nixos/hardware-configuration.nix
-edit machines/mystique/nixos/configuration.nix
-let s:save_splitbelow = &splitbelow
-let s:save_splitright = &splitright
-set splitbelow splitright
-wincmd _ | wincmd |
-split
-1wincmd k
-wincmd w
-wincmd _ | wincmd |
-vsplit
-1wincmd h
-wincmd w
-let &splitbelow = s:save_splitbelow
-let &splitright = s:save_splitright
-wincmd t
-let s:save_winminheight = &winminheight
-let s:save_winminwidth = &winminwidth
-set winminheight=0
-set winheight=1
-set winminwidth=0
-set winwidth=1
-exe '1resize ' . ((&lines * 27 + 26) / 52)
-exe '2resize ' . ((&lines * 22 + 26) / 52)
-exe 'vert 2resize ' . ((&columns * 91 + 91) / 183)
-exe '3resize ' . ((&lines * 22 + 26) / 52)
-exe 'vert 3resize ' . ((&columns * 91 + 91) / 183)
+$argadd machines/mystique-2024-02/nixos/configuration.nix
+$argadd machines/mystique-2024-02/nixos/flake.lock
+$argadd ~/nixos-config/mystique-flake.nix
+$argadd machines/mystique-2024-02/nixos/hardware-configuration.nix
+edit ~/nixos-config/mystique-flake.nix
 argglobal
+3argu
+balt machines/mystique-2024-02/nixos/flake.nix
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -60,63 +45,12 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 1 - ((0 * winheight(0) + 13) / 27)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 1
-normal! 0
-wincmd w
-argglobal
-4argu
-if bufexists(fnamemodify("machines/mystique/nixos/flake.nix", ":p")) | buffer machines/mystique/nixos/flake.nix | else | edit machines/mystique/nixos/flake.nix | endif
-if &buftype ==# 'terminal'
-  silent file machines/mystique/nixos/flake.nix
-endif
-balt machines/mystique/nixos/hardware-configuration.nix
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 17 - ((12 * winheight(0) + 11) / 22)
+let s:l = 17 - ((16 * winheight(0) + 28) / 56)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
 keepjumps 17
-normal! 019|
-wincmd w
-argglobal
-4argu
-balt machines/mystique/nixos/flake.nix
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 1 - ((0 * winheight(0) + 11) / 22)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 1
-normal! 0
-wincmd w
-2wincmd w
-exe '1resize ' . ((&lines * 27 + 26) / 52)
-exe '2resize ' . ((&lines * 22 + 26) / 52)
-exe 'vert 2resize ' . ((&columns * 91 + 91) / 183)
-exe '3resize ' . ((&lines * 22 + 26) / 52)
-exe 'vert 3resize ' . ((&columns * 91 + 91) / 183)
+normal! 029|
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf
@@ -124,15 +58,12 @@ endif
 unlet! s:wipebuf
 set winheight=1 winwidth=20
 let &shortmess = s:shortmess_save
-let &winminheight = s:save_winminheight
-let &winminwidth = s:save_winminwidth
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if filereadable(s:sx)
   exe "source " . fnameescape(s:sx)
 endif
 let &g:so = s:so_save | let &g:siso = s:siso_save
 set hlsearch
-nohlsearch
 let g:this_session = v:this_session
 let g:this_obsession = v:this_session
 doautoall SessionLoadPost

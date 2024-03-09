@@ -38,12 +38,15 @@ in
         { name = "grc"; src = pkgs.fishPlugins.grc.src; }
         { name = "forgit"; src = pkgs.fishPlugins.forgit.src; }
       ];
+      interactiveShellInit = ''
+        fish_vi_key_bindings
+      '';
       functions = {
         edit_home = ''
           $EDITOR -o ~/.config/home-manager/home.nix ~/.config/home-manager/shared.nix
         '';
         edit_nixos = ''
-          sudo $EDITOR -o /etc/nixos/configuration.nix /etc/nixos/hardware-configuration.nix
+          $EDITOR -o /etc/nixos/configuration.nix /etc/nixos/hardware-configuration.nix
         '';
       };
     };
@@ -66,8 +69,10 @@ in
         vim-easymotion
         vim-commentary
         vim-obsession
-        # animate
         lens-vim
+        vim-highlightedyank
+        close-buffers-vim
+        vim-indent-guides
 
         nerdtree
         vim-devicons
@@ -87,6 +92,8 @@ in
       extraConfigVim = ''
         set mouse=
         autocmd FileType nix setlocal commentstring=#\ %s
+        let g:lens#disabled_filetypes = ['nerdtree','fzf']
+        let g:indent_guides_enable_on_vim_startup = 1
       '';
     };
     programs.home-manager.enable = true;

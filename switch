@@ -6,8 +6,11 @@ set +x
 rebuild_home() {
   home-manager --help
 }
+update_system() {
+  nix flake update ~/nixos-config/machines/mystique
+}
 rebuild_system() {
-  sudo nixos-rebuild switch --flake ~/nixos-config/machines/mystique/
+  sudo nixos-rebuild switch --flake ~/nixos-config/
 }
 restart_X() {
   echo "⚠️ Restarting X11 (requires authentication) ⚠️"
@@ -22,6 +25,8 @@ case $1 in
     fish -c fish_update_completions;;
   "system")
     rebuild_system;;
+  "update")
+    update_system;;
   *)
     echo "expected 'home', 'restart-x', 'update-fish', 'system'";;
 esac

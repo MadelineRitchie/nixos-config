@@ -16,8 +16,8 @@
         system = "x86_64-linux";
         modules = [
           nixos-vfio.nixosModules.vfio
-          ./configuration.nix 
-          ./virtualisation.nix
+          ./machines/mystique/configuration.nix 
+          ./machines/mystique/virtualisation.nix
         ];
       };
     };

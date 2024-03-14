@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 {
   nixpkgs.config = {
     allowUnfree = true;
@@ -11,19 +11,15 @@
   home.homeDirectory = "/home/madeline";
 
   home.packages = with pkgs; [
-    obsidian
-    jetbrains.rider
+    obsidian #note workstation
+    jetbrains.rider #IDE
     ungoogled-chromium
-    vscode.fhs
     cinny-desktop
-    vesktop
-    strawberry-qt6
-    jdk17
+    vesktop #discord
+    strawberry-qt6 #music player
     looking-glass-client
-    qtox
     obs-studio
   ];
-
 
   dconf.settings = {
     "org/virt-manager/virt-manager/connections" = {
@@ -50,9 +46,11 @@
       });
     })
   ];
-
+  
+  # imports =  [
   imports = [
     ./shared.nix
   ];
+
   home.stateVersion = "23.11";
 }

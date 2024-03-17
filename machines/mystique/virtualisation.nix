@@ -87,6 +87,7 @@ in
 
                     bootIndex = 1;
                   }
+                  # GPU
                   {
                     sourceAddress = {
                       bus = "0x01";
@@ -94,6 +95,7 @@ in
                       function = 0;
                     };
                   }
+                  # GPU audio
                   {
                     sourceAddress = {
                       bus = "0x01";
@@ -101,8 +103,15 @@ in
                       function = 1;
                     };
                   }
+                  # USB-C controller
+                  {
+                    sourceAddress = {
+                      bus = "0x14";
+                      slot = "0x00";
+                      function = 3;
+                    };
+                  }
                 ];
-
               };
             };
           };

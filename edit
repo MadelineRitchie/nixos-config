@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -e
+set +x
+
+edit_home() {
+  $EDITOR -S home.vim
+}
+edit_system() {
+  $EDITOR -S system.vim
+}
+
+case $1 in
+  "home")
+    edit_home;;
+  "system")
+    edit_system;;
+  *)
+    echo "expected 'home' or 'system'";;
+esac

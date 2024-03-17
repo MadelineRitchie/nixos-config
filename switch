@@ -1,32 +1,32 @@
 #! /usr/bin/env bash
 
-# Shows the output of every command
-set +x
+set -e # Exit on errors
+set +x # Shows the output of every command
 
-rebuild_home() {
-  home-manager --help
+home() {
+  home-manager switch
 }
-update_system() {
+update() {
+  fish -c fish_update_completions
+  sudo nix-channel --update
   nix flake update ~/nixos-config/machines/mystique
 }
-rebuild_system() {
+system() {
   sudo nixos-rebuild switch --flake ~/nixos-config/
 }
-restart_X() {
+restartdm() {
   echo "⚠️ Restarting X11 (requires authentication) ⚠️"
   systemctl restart display-manager
 }
 case $1 in
   "home")
-    rebuild_home $2;;
-  "restart-x")
-    restart_X;;
-  "update-fish")
-    fish -c fish_update_completions;;
+    home $2;;
+  "restartdm")
+    restartdm;;
   "system")
-    rebuild_system;;
+    system;;
   "update")
-    update_system;;
+    update;;
   *)
-    echo "expected 'home', 'restart-x', 'update-fish', 'system'";;
+    echo "expected 'home', 'restartdm', 'system'";;
 esac

@@ -72,7 +72,6 @@ in
         lens-vim
         vim-highlightedyank
         close-buffers-vim
-        vim-indent-guides
 
         nerdtree
         vim-devicons
@@ -82,7 +81,7 @@ in
       globals = {
         mapleader = ",";
       };
-      options = {
+      opts = {
         number = true;
         relativenumber = true;
         title = true;
@@ -94,6 +93,9 @@ in
         autocmd FileType nix setlocal commentstring=#\ %s
         let g:lens#disabled_filetypes = ['nerdtree','fzf']
         let g:indent_guides_enable_on_vim_startup = 1
+
+        let g:lens#height_resize_min = 10
+        let g:lens#width_resize_min = 40
       '';
     };
     programs.home-manager.enable = true;

@@ -68,7 +68,7 @@
       "40-br0" = {
         matchConfig.Name = "br0";
         networkConfig.DHCP = "ipv4";
-        networkConfig.IPv6AcceptRA = true;
+        #networkConfig.IPv6AcceptRA = true;
       };
     };
   };
